@@ -1,4 +1,5 @@
 import json
+from backend.database import initialize_database, save_alert
 from detection.rules import (
     detect_multiple_failed_logins,
     detect_success_after_failures,
@@ -37,6 +38,11 @@ if __name__ == "__main__":
     alerts.extend(detect_multiple_failed_logins(events))
     alerts.extend(detect_success_after_failures(events))
     alerts.extend(detect_port_scan(events))
+
+    initialize_database()
+
+    for alert in alerts:
+    	save_alert(alert)
 
     print("Normalized Events:")
     for event in events:
