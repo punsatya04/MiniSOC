@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-10-03T01:10:00",
+    "source": "test-server",
+    "event_type": "login",
+    "username": "admin",
+    "status": "failed",
+    "ip_address": "192.168.1.50"
+  },
+  {
+    "timestamp": "2026-10-03T01:11:00",
+    "source": "test-server",
+    "event_type": "login",
+    "username": "admin",
+    "status": "failed",
+    "ip_address": "192.168.1.50"
+  },
+  {
+    "timestamp": "2026-10-03T01:12:00",
+    "source": "test-server",
+    "event_type": "login",
+    "username": "admin",
+    "status": "success",
+    "ip_address": "192.168.1.50"
+  }
+]
