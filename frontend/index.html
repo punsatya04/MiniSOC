@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniSOC Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f6f8;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .summary {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 150px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .card p {
+            margin-bottom: 0;
+            color: #666;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: white;
+        }
+
+        .high {
+            font-weight: bold;
+            color: #b00020;
+        }
+
+        .medium {
+            color: #b36b00;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>MiniSOC Dashboard</h1>
+    <div class="subtitle">Security Alert Monitoring</div>
+
+    <div class="summary">
+        <div class="card">
+            <h2 id="total-alerts">0</h2>
+            <p>Total Alerts</p>
+        </div>
+
+        <div class="card">
+            <h2 id="high-alerts">0</h2>
+            <p>High Severity</p>
+        </div>
+
+        <div class="card">
+            <h2 id="medium-alerts">0</h2>
+            <p>Medium Severity</p>
+        </div>
+    </div>
+
+    <h2>Alerts</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Rule</th>
+                <th>Source IP</th>
+                <th>Severity</th>
+                <th>Failed Attempts</th>
+                <th>Unique Ports</th>
+            </tr>
+        </thead>
+
+        <tbody id="alerts-table"></tbody>
+    </table>
+
+    <script>
+        async function loadAlerts() {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/alerts");
+                const alerts = await response.json();
+
+                const table = document.getElementById("alerts-table");
+                table.innerHTML = "";
+
+                let highCount = 0;
+                let mediumCount = 0;
+
+                alerts.forEach(alert => {
+
+                    if (alert.severity === "high") {
+                        highCount++;
+                    }
+
+                    if (alert.severity === "medium") {
+                        mediumCount++;
+                    }
+
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${alert.id}</td>
+                        <td>${alert.rule}</td>
+                        <td>${alert.source_ip}</td>
+                        <td class="${alert.severity}">
+                            ${alert.severity}
+                        </td>
+                        <td>${alert.failed_attempts ?? "-"}</td>
+                        <td>${alert.unique_ports ?? "-"}</td>
+                    `;
+
+                    table.appendChild(row);
+                });
+
+                document.getElementById("total-alerts").textContent = alerts.length;
+                document.getElementById("high-alerts").textContent = highCount;
+                document.getElementById("medium-alerts").textContent = mediumCount;
+
+            } catch (error) {
+                console.error("Unable to load alerts:", error);
+            }
+        }
+
+        loadAlerts();
+    </script>
+
+</body>
+</html>

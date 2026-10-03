@@ -1,9 +1,16 @@
 import sqlite3
-
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 
 
 app = FastAPI(title="MiniSOC API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://127.0.0.1:3000", "http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DB_PATH = "minisoc.db"
 
