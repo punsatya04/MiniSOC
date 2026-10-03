@@ -1,5 +1,8 @@
 import json
-from detection.rules import detect_multiple_failed_logins
+from detection.rules import (
+    detect_multiple_failed_logins,
+    detect_success_after_failures
+)
 
 def load_logs(file_path):
     with open(file_path, "r") as file:
@@ -28,7 +31,9 @@ if __name__ == "__main__":
         event = normalize_event(log)
         events.append(event)
 
-    alerts = detect_multiple_failed_logins(events)
+    alerts = []
+    alerts.extend(detect_multiple_failed_logins(events))
+    alerts.extend(detect_success_after_failures(events))
 
     print("Normalized Events:")
     for event in events:
