@@ -1,7 +1,8 @@
 import json
 from detection.rules import (
     detect_multiple_failed_logins,
-    detect_success_after_failures
+    detect_success_after_failures,
+    detect_port_scan
 )
 
 def load_logs(file_path):
@@ -18,7 +19,8 @@ def normalize_event(log):
         "event_type": log.get("event_type"),
         "username": log.get("username"),
         "status": log.get("status"),
-        "source_ip": log.get("ip_address")
+        "source_ip": log.get("ip_address"),
+	"destination_port": log.get("destination_port")
     }
 
 
@@ -34,6 +36,7 @@ if __name__ == "__main__":
     alerts = []
     alerts.extend(detect_multiple_failed_logins(events))
     alerts.extend(detect_success_after_failures(events))
+    alerts.extend(detect_port_scan(events))
 
     print("Normalized Events:")
     for event in events:

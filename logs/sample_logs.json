@@ -22,5 +22,26 @@
     "username": "admin",
     "status": "success",
     "ip_address": "192.168.1.50"
+  },
+  {
+    "timestamp": "2026-10-03T01:20:00",
+    "source": "test-server",
+    "event_type": "connection",
+    "ip_address": "192.168.1.60",
+    "destination_port": 22
+  },
+  {
+    "timestamp": "2026-10-03T01:20:10",
+    "source": "test-server",
+    "event_type": "connection",
+    "ip_address": "192.168.1.60",
+    "destination_port": 80
+  },
+  {
+    "timestamp": "2026-10-03T01:20:20",
+    "source": "test-server",
+    "event_type": "connection",
+    "ip_address": "192.168.1.60",
+    "destination_port": 443
   }
 ]

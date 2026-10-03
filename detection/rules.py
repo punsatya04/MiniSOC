@@ -45,3 +45,28 @@ def detect_success_after_failures(events, threshold=2):
                 })
 
     return alerts
+
+def detect_port_scan(events, threshold=3):
+    ports_by_ip = {}
+    alerts = []
+
+    for event in events:
+        if event.get("event_type") == "connection":
+            source_ip = event.get("source_ip")
+            destination_port = event.get("destination_port")
+
+            if source_ip not in ports_by_ip:
+                ports_by_ip[source_ip] = set()
+
+            ports_by_ip[source_ip].add(destination_port)
+
+    for source_ip, ports in ports_by_ip.items():
+        if len(ports) >= threshold:
+            alerts.append({
+                "rule": "Possible Port Scan",
+                "source_ip": source_ip,
+                "unique_ports": len(ports),
+                "severity": "medium"
+            })
+
+    return alerts
